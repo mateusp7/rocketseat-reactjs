@@ -32,6 +32,13 @@ const Post = ({ author, publishedAt, content }) => {
     setNewCommentText(event.target.value)
   }
 
+  function deleteComment(commentToDelete) {
+    const commentsWithoutDeletedOne = comments.filter((comment) => {
+      return comment !== commentToDelete
+    })
+    setComments(commentsWithoutDeletedOne)
+  }
+
   return (
     <article className={styles.post}>
       <header>
@@ -55,10 +62,10 @@ const Post = ({ author, publishedAt, content }) => {
         {content.map((line) => {
           switch (line.type) {
             case "paragraph":
-              return <p>{line.content}</p>
+              return <p key={line.content}>{line.content}</p>
             case "link":
               return (
-                <p>
+                <p key={line.content}>
                   <a href="#">{line.content}</a>
                 </p>
               )
@@ -81,7 +88,13 @@ const Post = ({ author, publishedAt, content }) => {
       </form>
       <div className={styles.commentList}>
         {comments.map((comment) => {
-          return <Comment content={comment} />
+          return (
+            <Comment
+              key={comment}
+              content={comment}
+              onDeleteComment={deleteComment}
+            />
+          )
         })}
       </div>
     </article>
